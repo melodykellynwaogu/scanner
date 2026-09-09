@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOC Web Recon & Hardening Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SOC Web Recon & Hardening Dashboard</h1>
+            <p>Analyze HTTP security headers, open ports, and banner disclosures.</p>
+        </header>
+
+        <section class="search-section">
+            <div class="input-group">
+                <input type="text" id="targetUrl" placeholder="example.com" />
+                <button id="scanBtn" onclick="runScan()">Analyze Target</button>
+            </div>
+        </section>
+
+        <div id="loader" class="hidden">Scanning target response headers and network ports...</div>
+
+        <section id="results" class="results-grid hidden">
+            <!-- Target Summary & Actions -->
+            <div class="card full-width summary-card">
+                <div>
+                    <h2>Target Summary</h2>
+                    <p><strong>URL:</strong> <span id="resTarget">-</span></p>
+                    <p><strong>HTTP Status:</strong> <span id="resStatus">-</span></p>
+                </div>
+                <div class="export-actions">
+                    <button onclick="exportJSON()" class="btn-secondary">Export JSON</button>
+                    <button onclick="exportPDF()" class="btn-secondary">Export PDF</button>
+                </div>
+            </div>
+
+            <!-- Open Ports -->
+            <div class="card full-width">
+                <h2>Open Network Ports (Nmap Recon)</h2>
+                <p><strong>Resolved IP:</strong> <span id="resIp">-</span></p>
+                <ul id="portsList" class="header-list warn"></ul>
+            </div>
+
+            <!-- Present Headers -->
+            <div class="card">
+                <h2>Present Security Headers</h2>
+                <ul id="presentHeadersList" class="header-list pass"></ul>
+            </div>
+
+            <!-- Missing Headers -->
+            <div class="card">
+                <h2>Missing Security Headers</h2>
+                <ul id="missingHeadersList" class="header-list fail"></ul>
+            </div>
+
+            <!-- Banner Disclosures -->
+            <div class="card full-width">
+                <h2>Server Banner Disclosures</h2>
+                <ul id="bannerList" class="header-list warn"></ul>
+            </div>
+
+            <!-- Remediation Snippets -->
+            <div class="card full-width">
+                <h2>Remediation Code Snippets (Nginx)</h2>
+                <p class="remediation-sub">Copy these directives into your Nginx configuration block to fix missing security headers:</p>
+                <pre id="remediationCode"><code># No missing security headers identified.</code></pre>
+            </div>
+        </section>
+    </div>
+
+    <script src="app.js?v=3"></script>
+</body>
+</html>
