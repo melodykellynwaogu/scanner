@@ -3,71 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOC Web Recon & Hardening Dashboard</title>
+    <title>Signal / Web Recon Console</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>SOC Web Recon & Hardening Dashboard</h1>
-            <p>Analyze HTTP security headers, open ports, and banner disclosures.</p>
+    <div class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="/" aria-label="Signal home"><span class="brand-mark">S</span><span>Signal <em>/</em> Recon</span></a>
+            <div class="topbar-meta"><span class="live-dot"></span> Analysis console <span class="separator">/</span> v1.0</div>
         </header>
 
-        <section class="search-section">
-            <div class="input-group">
-                <input type="text" id="targetUrl" placeholder="example.com" />
-                <button id="scanBtn" onclick="runScan()">Analyze Target</button>
-            </div>
-        </section>
+        <main>
+            <section class="hero">
+                <div class="eyebrow">External attack surface</div>
+                <h1>Know what your web perimeter <span>reveals.</span></h1>
+                <p class="hero-copy">Inspect security headers, exposed services, and server fingerprints from a single target.</p>
+                <div class="search-section">
+                    <label for="targetUrl">Target domain or URL</label>
+                    <div class="input-group">
+                        <span class="input-prefix">https://</span>
+                        <input type="text" id="targetUrl" placeholder="example.com" autocomplete="url" />
+                        <button id="scanBtn" onclick="runScan()"><span>Run analysis</span><span class="button-arrow">-&gt;</span></button>
+                    </div>
+                    <div class="search-hint"><span class="hint-dot"></span> Passive HTTP checks + common-port reconnaissance</div>
+                </div>
+            </section>
 
-        <div id="loader" class="hidden">Scanning target response headers and network ports...</div>
+            <div id="loader" class="loader hidden" role="status"><span class="spinner"></span><span>Scanning target response headers and network ports...</span></div>
 
         <section id="results" class="results-grid hidden">
             <!-- Target Summary & Actions -->
             <div class="card full-width summary-card">
                 <div>
-                    <h2>Target Summary</h2>
-                    <p><strong>URL:</strong> <span id="resTarget">-</span></p>
-                    <p><strong>HTTP Status:</strong> <span id="resStatus">-</span></p>
+                    <div class="card-kicker">Scan complete</div>
+                    <h2>Target summary</h2>
+                    <div class="summary-meta"><p><strong>URL</strong><span id="resTarget">-</span></p><p><strong>HTTP status</strong><span id="resStatus">-</span></p></div>
                 </div>
                 <div class="export-actions">
-                    <button onclick="exportJSON()" class="btn-secondary">Export JSON</button>
-                    <button onclick="exportPDF()" class="btn-secondary">Export PDF</button>
+                    <button onclick="exportJSON()" class="btn-secondary">Export JSON <span>-&gt;</span></button>
+                    <button onclick="exportPDF()" class="btn-secondary">Print report <span>-&gt;</span></button>
                 </div>
             </div>
 
             <!-- Open Ports -->
             <div class="card full-width">
-                <h2>Open Network Ports (Nmap Recon)</h2>
-                <p><strong>Resolved IP:</strong> <span id="resIp">-</span></p>
+                <div class="card-heading"><div><div class="card-kicker amber">Network surface</div><h2>Open network ports</h2></div><span class="section-index">01</span></div>
+                <p class="resolved-ip"><strong>Resolved IP</strong><span id="resIp">-</span></p>
                 <ul id="portsList" class="header-list warn"></ul>
             </div>
 
             <!-- Present Headers -->
             <div class="card">
-                <h2>Present Security Headers</h2>
+                <div class="card-heading"><div><div class="card-kicker green">Coverage</div><h2>Present security headers</h2></div><span class="section-index">02</span></div>
                 <ul id="presentHeadersList" class="header-list pass"></ul>
             </div>
 
             <!-- Missing Headers -->
             <div class="card">
-                <h2>Missing Security Headers</h2>
+                <div class="card-heading"><div><div class="card-kicker red">Attention</div><h2>Missing security headers</h2></div><span class="section-index">03</span></div>
                 <ul id="missingHeadersList" class="header-list fail"></ul>
             </div>
 
             <!-- Banner Disclosures -->
             <div class="card full-width">
-                <h2>Server Banner Disclosures</h2>
+                <div class="card-heading"><div><div class="card-kicker amber">Fingerprinting</div><h2>Server banner disclosures</h2></div><span class="section-index">04</span></div>
                 <ul id="bannerList" class="header-list warn"></ul>
             </div>
 
             <!-- Remediation Snippets -->
             <div class="card full-width">
-                <h2>Remediation Code Snippets (Nginx)</h2>
+                <div class="card-heading"><div><div class="card-kicker blue">Hardening</div><h2>Remediation snippets</h2></div><span class="section-index">05</span></div>
                 <p class="remediation-sub">Copy these directives into your Nginx configuration block to fix missing security headers:</p>
                 <pre id="remediationCode"><code># No missing security headers identified.</code></pre>
             </div>
-        </section>
+            </section>
+        </main>
+        <footer><span>Signal Recon Console</span><span>Built for focused review</span></footer>
     </div>
 
     <script src="app.js?v=3"></script>

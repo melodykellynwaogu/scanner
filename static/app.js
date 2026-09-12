@@ -11,9 +11,14 @@ async function runScan() {
 
     const loader = document.getElementById('loader');
     const results = document.getElementById('results');
+    const scanButton = document.getElementById('scanBtn');
 
     if (loader) loader.classList.remove('hidden');
     if (results) results.classList.add('hidden');
+    if (scanButton) {
+        scanButton.disabled = true;
+        scanButton.querySelector('span').innerText = 'Scanning';
+    }
 
     try {
         const response = await fetch('/api/scan', {
@@ -29,6 +34,10 @@ async function runScan() {
         currentScanData = await response.json();
 
         if (loader) loader.classList.add('hidden');
+        if (scanButton) {
+            scanButton.disabled = false;
+            scanButton.querySelector('span').innerText = 'Run analysis';
+        }
 
         renderResults(currentScanData);
 
@@ -36,6 +45,10 @@ async function runScan() {
 
     } catch (err) {
         if (loader) loader.classList.add('hidden');
+        if (scanButton) {
+            scanButton.disabled = false;
+            scanButton.querySelector('span').innerText = 'Run analysis';
+        }
         console.error('SOC Dashboard Scan Exception:', err);
         alert('Scan Failed: ' + err.message);
     }
