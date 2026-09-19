@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="2rgDlfAFb57bcx8nW--jxTQBHM4CmyHF8XozJciKH88" />
     <title>Signal / Web Recon Console</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -52,27 +53,34 @@
                 <ul id="portsList" class="header-list warn"></ul>
             </div>
 
+            <!-- Subdomain Enumeration -->
+            <div class="card full-width">
+                <div class="card-heading"><div><div class="card-kicker blue">Discovery</div><h2>Discovered subdomains</h2></div><span class="section-index">02</span></div>
+                <p class="resolved-ip"><strong>Discovery source</strong><span id="subdomainSource">-</span></p>
+                <ul id="subdomainsList" class="header-list pass"></ul>
+            </div>
+
             <!-- Present Headers -->
             <div class="card">
-                <div class="card-heading"><div><div class="card-kicker green">Coverage</div><h2>Present security headers</h2></div><span class="section-index">02</span></div>
+                <div class="card-heading"><div><div class="card-kicker green">Coverage</div><h2>Present security headers</h2></div><span class="section-index">03</span></div>
                 <ul id="presentHeadersList" class="header-list pass"></ul>
             </div>
 
             <!-- Missing Headers -->
             <div class="card">
-                <div class="card-heading"><div><div class="card-kicker red">Attention</div><h2>Missing security headers</h2></div><span class="section-index">03</span></div>
+                <div class="card-heading"><div><div class="card-kicker red">Attention</div><h2>Missing security headers</h2></div><span class="section-index">04</span></div>
                 <ul id="missingHeadersList" class="header-list fail"></ul>
             </div>
 
             <!-- Banner Disclosures -->
             <div class="card full-width">
-                <div class="card-heading"><div><div class="card-kicker amber">Fingerprinting</div><h2>Server banner disclosures</h2></div><span class="section-index">04</span></div>
+                <div class="card-heading"><div><div class="card-kicker amber">Fingerprinting</div><h2>Server banner disclosures</h2></div><span class="section-index">05</span></div>
                 <ul id="bannerList" class="header-list warn"></ul>
             </div>
 
             <!-- Remediation Snippets -->
             <div class="card full-width">
-                <div class="card-heading"><div><div class="card-kicker blue">Hardening</div><h2>Remediation snippets</h2></div><span class="section-index">05</span></div>
+                <div class="card-heading"><div><div class="card-kicker blue">Hardening</div><h2>Remediation snippets</h2></div><span class="section-index">06</span></div>
                 <p class="remediation-sub">Copy these directives into your Nginx configuration block to fix missing security headers:</p>
                 <pre id="remediationCode"><code># No missing security headers identified.</code></pre>
             </div>

@@ -13,10 +13,14 @@ def scan_ports(target_input: str) -> Dict[str, Any]:
     
     try:
         # Scan common web/infra ports with service version detection
-        nm.scan(hosts=domain, ports='21,22,80,443,8080', arguments='-sV --open')
+        nm.scan(
+            hosts=domain,
+            ports='21,22,80,443,8080',
+            arguments='-sV --open --host-timeout 15s --script-timeout 10s',
+        )
         
         open_ports = []
-        host_ip = "Unknown"
+        host_ip = "Unknown"              
 
         for host in nm.all_hosts():
             host_ip = host
