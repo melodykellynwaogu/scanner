@@ -37,7 +37,7 @@ async function runScan() {
         if (scanButton) {
             scanButton.disabled = false;
             scanButton.querySelector('span').innerText = 'Run analysis';
-        }
+        }         
 
         renderResults(currentScanData);
 
@@ -57,9 +57,34 @@ async function runScan() {
 function renderResults(data) {
     const headerData = data.headers || data;
     const portData = data.ports || null;
+    const subdomainData = data.subdomains || null;
 
     document.getElementById('resTarget').innerText = headerData.target || 'N/A';
     document.getElementById('resStatus').innerText = headerData.status_code || 'N/A';
+
+    const subdomainSource = document.getElementById('subdomainSource');
+    const subdomainsList = document.getElementById('subdomainsList');
+    if (subdomainSource && subdomainsList) {
+        if (subdomainData?.status === 'success') {
+            subdomainSource.innerText = `${subdomainData.source || 'Certificate Transparency logs'} (${subdomainData.count || 0} found)`;
+        } else if (subdomainData?.status === 'error') {
+            subdomainSource.innerText = 'Discovery failed';
+        } else {
+            subdomainSource.innerText = 'No discovery response';
+        }
+
+        if (subdomainData?.status === 'success' && Array.isArray(subdomainData.subdomains) && subdomainData.subdomains.length) {
+            subdomainsList.innerHTML = subdomainData.subdomains.map(subdomain => {
+                const addresses = subdomain.addresses.length ? ` (${subdomain.addresses.join(', ')})` : ' (no DNS record)';
+                return `<li><strong>${escapeHTML(subdomain.hostname)}</strong>${escapeHTML(addresses)}</li>`;
+            }).join('');
+        } else {
+            const message = subdomainData?.status === 'success'
+                ? 'No subdomains found in the current passive sources.'
+                : subdomainData?.message || 'The subdomain discovery response was unavailable.';
+            subdomainsList.innerHTML = `<li>${escapeHTML(message)}</li>`;
+        }
+    }
 
     // 1. Present Headers
     const presentList = document.getElementById('presentHeadersList');
@@ -137,3 +162,4 @@ function escapeHTML(str) {
     if (typeof str !== 'string') return str;
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
+
