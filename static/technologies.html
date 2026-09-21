@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal / Technology Fingerprint</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="technologies">
+    <div class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="/" aria-label="Signal home"><span class="brand-mark">S</span><span>Signal <em>/</em> Recon</span></a>
+            <nav class="site-nav" aria-label="Report navigation"><a href="/">Overview</a><a href="archives.html">Archives</a><a class="active" href="technologies.html">Technology</a></nav>
+            <div class="topbar-meta"><span class="live-dot"></span> Fingerprint view <span class="separator">/</span> v1.0</div>
+        </header>
+        <main>
+            <section class="detail-hero"><div class="eyebrow">Technology surface</div><h1>See what the<br><span>stack reveals.</span></h1><p class="hero-copy">Review response, cookie, hosting, CMS, and framework signatures identified during the latest scan.</p></section>
+            <section class="detail-panel">
+                <div class="card-heading"><div><div class="card-kicker blue">Fingerprint inventory</div><h2>Detected technologies</h2></div><span class="section-index">09</span></div>
+                <p class="resolved-ip"><strong>Target response</strong><span id="detailTarget">-</span></p>
+                <p class="resolved-ip"><strong>Scan status</strong><span id="detailSource">-</span></p>
+                <ul id="detailList" class="header-list pass detail-list"></ul>
+            </section>
+        </main>
+        <footer><span>Signal Recon Console</span><a href="/">Back to overview -&gt;</a></footer>
+    </div>
+    <script src="detail.js"></script>
+</body>
+</html>

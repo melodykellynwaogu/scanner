@@ -32,6 +32,10 @@ async function runScan() {
         }
 
         currentScanData = await response.json();
+        localStorage.setItem('signalReconScan', JSON.stringify({
+            savedAt: new Date().toISOString(),
+            data: currentScanData,
+        }));
 
         if (loader) loader.classList.add('hidden');
         if (scanButton) {
@@ -58,6 +62,10 @@ function renderResults(data) {
     const headerData = data.headers || data;
     const portData = data.ports || null;
     const subdomainData = data.subdomains || null;
+    const directoryData = data.directories || null;
+    const jsApiData = data.js_api || null;
+    const archiveData = data.archives || null;
+    const technologyData = data.technology || null;
 
     document.getElementById('resTarget').innerText = headerData.target || 'N/A';
     document.getElementById('resStatus').innerText = headerData.status_code || 'N/A';
@@ -86,6 +94,69 @@ function renderResults(data) {
         }
     }
 
+    // Directory Discovery
+    const directoryList = document.getElementById('directoryList');
+    if (directoryList) {
+        if (directoryData?.status === 'success' && Array.isArray(directoryData.paths) && directoryData.paths.length) {
+            directoryList.innerHTML = directoryData.paths.map(item =>
+                `<li><strong>${escapeHTML(item.path)}</strong> → ${escapeHTML(item.url)} (HTTP ${escapeHTML(String(item.status_code))})</li>`
+            ).join('');
+        } else {
+            directoryList.innerHTML = '<li>No likely sensitive paths found in the current common target list.</li>';
+        }
+    }
+
+    // JavaScript / API Findings
+    const jsApiList = document.getElementById('jsApiList');
+    if (jsApiList) {
+        if (jsApiData?.status === 'success') {
+            const findings = [];
+            if (Array.isArray(jsApiData.javascript_files) && jsApiData.javascript_files.length) {
+                findings.push(`<li><strong>JavaScript files:</strong> ${escapeHTML(jsApiData.javascript_files.slice(0, 5).join(', '))}</li>`);
+            }
+            if (Array.isArray(jsApiData.endpoints) && jsApiData.endpoints.length) {
+                findings.push(`<li><strong>Endpoints:</strong> ${escapeHTML(jsApiData.endpoints.slice(0, 5).join(', '))}</li>`);
+            }
+            if (Array.isArray(jsApiData.possible_secrets) && jsApiData.possible_secrets.length) {
+                findings.push(`<li><strong>Possible secrets:</strong> ${escapeHTML(jsApiData.possible_secrets.slice(0, 5).join(', '))}</li>`);
+            }
+            jsApiList.innerHTML = findings.length ? findings.join('') : '<li>No JavaScript or API clues were found.</li>';
+        } else {
+            jsApiList.innerHTML = `<li>${escapeHTML(jsApiData?.message || 'JavaScript and API analysis was unavailable.')}</li>`;
+        }
+    }
+
+    const archiveSource = document.getElementById('archiveSource');
+    const archiveList = document.getElementById('archiveList');
+    if (archiveSource && archiveList) {
+        if (archiveData?.status === 'success') {
+            archiveSource.innerText = `${archiveData.source || 'Internet Archive'} (${archiveData.count || 0} found)`;
+        } else {
+            archiveSource.innerText = archiveData?.status === 'error' ? 'Archive lookup failed' : 'No archive response';
+        }
+
+        if (archiveData?.status === 'success' && Array.isArray(archiveData.urls) && archiveData.urls.length) {
+            archiveList.innerHTML = archiveData.urls.slice(0, 20).map(item =>
+                `<li><strong>${escapeHTML(item.url)}</strong> <a href="${escapeHTML(item.replay_url)}" target="_blank" rel="noopener">Replay -&gt;</a><br><span>${escapeHTML(item.timestamp)} / HTTP ${escapeHTML(item.status_code)} / ${escapeHTML(item.mime_type)}</span></li>`
+            ).join('');
+        } else {
+            archiveList.innerHTML = `<li>${escapeHTML(archiveData?.message || 'No archived URLs found in the current source.')}</li>`;
+        }
+    }
+
+    const technologyTarget = document.getElementById('technologyTarget');
+    const technologyList = document.getElementById('technologyList');
+    if (technologyTarget && technologyList) {
+        technologyTarget.innerText = technologyData?.target || 'Unavailable';
+        if (technologyData?.status === 'success' && Array.isArray(technologyData.technologies) && technologyData.technologies.length) {
+            technologyList.innerHTML = technologyData.technologies.map(item =>
+                `<li><strong>${escapeHTML(item.name)}</strong> <span>${escapeHTML(item.category)} / ${escapeHTML(item.evidence)}</span></li>`
+            ).join('');
+        } else {
+            technologyList.innerHTML = `<li>${escapeHTML(technologyData?.message || 'No technology signatures identified.')}</li>`;
+        }
+    }
+
     // 1. Present Headers
     const presentList = document.getElementById('presentHeadersList');
     const presentHeaders = headerData.present_headers || {};
@@ -97,7 +168,10 @@ function renderResults(data) {
     // 2. Missing Headers
     const missingList = document.getElementById('missingHeadersList');
     const missingHeaders = headerData.missing_headers || {};
-    missingList.innerHTML = Object.keys(missingHeaders).length ? '' : '<li>All core security headers are active!</li>';
+    const fallbackNotice = headerData.status === 'fallback'
+        ? '<li><strong>Unverified baseline:</strong> the target could not be reached, so these are remediation suggestions rather than confirmed missing headers.</li>'
+        : '';
+    missingList.innerHTML = fallbackNotice + (Object.keys(missingHeaders).length ? '' : '<li>All core security headers are active!</li>');
     
     let remediationRules = [];
 
@@ -108,6 +182,14 @@ function renderResults(data) {
         if (typeof info === 'object' && info.remediation_nginx) {
             remediationRules.push(info.remediation_nginx);
         }
+    }
+
+    const weakList = document.getElementById('weakHeadersList');
+    const weakHeaders = headerData.weak_headers || {};
+    if (weakList) {
+        weakList.innerHTML = Object.keys(weakHeaders).length
+            ? Object.entries(weakHeaders).map(([header, info]) => `<li><strong>${escapeHTML(header)}:</strong> ${escapeHTML(info.description)} (value: ${escapeHTML(info.value)})</li>`).join('')
+            : '<li>No weak header values identified.</li>';
     }
 
     // 3. Banner Disclosures
