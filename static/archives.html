@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal / Archived URLs</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="archives">
+    <div class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="/" aria-label="Signal home"><span class="brand-mark">S</span><span>Signal <em>/</em> Recon</span></a>
+            <nav class="site-nav" aria-label="Report navigation"><a href="/">Overview</a><a class="active" href="archives.html">Archives</a><a href="technologies.html">Technology</a></nav>
+            <div class="topbar-meta"><span class="live-dot"></span> Historical view <span class="separator">/</span> v1.0</div>
+        </header>
+        <main>
+            <section class="detail-hero"><div class="eyebrow">Historical surface</div><h1>What the web<br><span>used to remember.</span></h1><p class="hero-copy">Review URLs captured by the Internet Archive that may no longer be linked from the live site.</p></section>
+            <section class="detail-panel">
+                <div class="card-heading"><div><div class="card-kicker amber">Archive inventory</div><h2>Archived URLs</h2></div><span class="section-index">08</span></div>
+                <p class="resolved-ip"><strong>Target</strong><span id="detailTarget">-</span></p>
+                <p class="resolved-ip"><strong>Source</strong><span id="detailSource">-</span></p>
+                <ul id="detailList" class="header-list warn detail-list"></ul>
+            </section>
+        </main>
+        <footer><span>Signal Recon Console</span><a href="/">Back to overview -&gt;</a></footer>
+    </div>
+    <script src="detail.js"></script>
+</body>
+</html>

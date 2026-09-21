@@ -11,6 +11,7 @@
     <div class="app-shell">
         <header class="topbar">
             <a class="brand" href="/" aria-label="Signal home"><span class="brand-mark">S</span><span>Signal <em>/</em> Recon</span></a>
+            <nav class="site-nav" aria-label="Report navigation"><a class="active" href="/">Overview</a><a href="archives.html">Archives</a><a href="technologies.html">Technology</a></nav>
             <div class="topbar-meta"><span class="live-dot"></span> Analysis console <span class="separator">/</span> v1.0</div>
         </header>
 
@@ -72,15 +73,47 @@
                 <ul id="missingHeadersList" class="header-list fail"></ul>
             </div>
 
+            <!-- Weak Header Values -->
+            <div class="card full-width">
+                <div class="card-heading"><div><div class="card-kicker amber">Validation</div><h2>Weak header values</h2></div><span class="section-index">05</span></div>
+                <ul id="weakHeadersList" class="header-list warn"></ul>
+            </div>
+
             <!-- Banner Disclosures -->
             <div class="card full-width">
-                <div class="card-heading"><div><div class="card-kicker amber">Fingerprinting</div><h2>Server banner disclosures</h2></div><span class="section-index">05</span></div>
+                <div class="card-heading"><div><div class="card-kicker amber">Fingerprinting</div><h2>Server banner disclosures</h2></div><span class="section-index">06</span></div>
                 <ul id="bannerList" class="header-list warn"></ul>
+            </div>
+
+            <!-- Directory Discovery -->
+            <div class="card">
+                <div class="card-heading"><div><div class="card-kicker blue">Discovery</div><h2>Potential directories</h2></div><span class="section-index">07</span></div>
+                <ul id="directoryList" class="header-list warn"></ul>
+            </div>
+
+            <!-- JavaScript/API Findings -->
+            <div class="card">
+                <div class="card-heading"><div><div class="card-kicker green">Exposure</div><h2>JavaScript / API findings</h2></div><span class="section-index">08</span></div>
+                <ul id="jsApiList" class="header-list pass"></ul>
+            </div>
+
+            <!-- Historical URLs -->
+            <div class="card full-width">
+                <div class="card-heading"><div><div class="card-kicker amber">History</div><h2>Archived URLs</h2></div><span class="section-index">09</span></div>
+                <p class="resolved-ip"><strong>Archive source</strong><span id="archiveSource">-</span></p>
+                <ul id="archiveList" class="header-list warn"></ul>
+            </div>
+
+            <!-- Technology Fingerprinting -->
+            <div class="card full-width">
+                <div class="card-heading"><div><div class="card-kicker blue">Fingerprinting</div><h2>Detected technologies</h2></div><span class="section-index">10</span></div>
+                <p class="resolved-ip"><strong>Inspected response</strong><span id="technologyTarget">-</span></p>
+                <ul id="technologyList" class="header-list pass"></ul>
             </div>
 
             <!-- Remediation Snippets -->
             <div class="card full-width">
-                <div class="card-heading"><div><div class="card-kicker blue">Hardening</div><h2>Remediation snippets</h2></div><span class="section-index">06</span></div>
+                <div class="card-heading"><div><div class="card-kicker blue">Hardening</div><h2>Remediation snippets</h2></div><span class="section-index">11</span></div>
                 <p class="remediation-sub">Copy these directives into your Nginx configuration block to fix missing security headers:</p>
                 <pre id="remediationCode"><code># No missing security headers identified.</code></pre>
             </div>
