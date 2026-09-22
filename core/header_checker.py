@@ -86,7 +86,7 @@ def _fallback_result(target_url: str, error: Exception) -> Dict[str, Any]:
             "remediation_nginx": info["nginx"],
             "remediation_apache": info["apache"],
             "verification": "Not verified because the target could not be reached.",
-        }
+        }       
         for header, info in RECOMMENDED_HEADERS.items()
     }
     return {
@@ -97,7 +97,17 @@ def _fallback_result(target_url: str, error: Exception) -> Dict[str, Any]:
         "present_headers": {},
         "missing_headers": fallback_missing,
         "weak_headers": {},
-        "banner_disclosures": {},
+        "header_summary": {
+            "status": "unable_to_verify",
+            "message": "Unable to verify required headers because the target could not be reached.",
+            "required_count": len(RECOMMENDED_HEADERS),
+            "present_count": 0,
+            "missing_count": len(RECOMMENDED_HEADERS),
+            "weak_count": 0,
+            "missing": list(RECOMMENDED_HEADERS),    
+            "weak": [],               
+        },
+        "banner_disclosures": {},               
     }
 
 def analyze_headers(target_url: str) -> Dict[str, Any]:
@@ -154,6 +164,18 @@ def analyze_headers(target_url: str) -> Dict[str, Any]:
             if banner_header.lower() in normalized_headers:
                 banners[banner_header] = normalized_headers[banner_header.lower()]
 
+        missing_names = list(missing_headers)
+        weak_names = list(weak_headers)
+        if missing_names:
+            summary_status = "missing_headers"
+            summary_message = f"Missing required headers: {', '.join(missing_names)}."
+        elif weak_names:
+            summary_status = "weak_headers"
+            summary_message = f"All required headers are present, but values need attention: {', '.join(weak_names)}."
+        else:
+            summary_status = "complete"
+            summary_message = "All required security headers are present and passed basic value checks."
+
         return {
             "status": "success",
             "target": target_url,
@@ -162,6 +184,16 @@ def analyze_headers(target_url: str) -> Dict[str, Any]:
             "present_headers": present_headers,
             "missing_headers": missing_headers,
             "weak_headers": weak_headers,
+            "header_summary": {
+                "status": summary_status,
+                "message": summary_message,
+                "required_count": len(RECOMMENDED_HEADERS),
+                "present_count": len(present_headers),
+                "missing_count": len(missing_headers),
+                "weak_count": len(weak_headers),
+                "missing": missing_names,
+                "weak": weak_names,
+            },
             "banner_disclosures": banners
         }
 

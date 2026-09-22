@@ -92,12 +92,23 @@ The scanner can use multiple HTML pages if the report grows beyond one screen. T
 - Reports present but weak headers separately from headers that are absent.
 - Provides remediation guidance when a target cannot be reached, but labels it as an unverified baseline instead of claiming the headers are confirmed missing.
 
-## Development Environment - 2026-09-21
+### Explicit Header Audit Status - 2026-09-22
+
+- Added a summary result for every header audit.
+- Reports `All required security headers are present` when all required headers pass basic checks.
+- Reports the exact missing headers when one or more are absent.
+- Reports present but weak values separately, such as an invalid `X-Frame-Options` value.
+- Reports `Unable to verify` when the target cannot be reached instead of treating the fallback baseline as confirmed evidence.
+
+## Development Environment - 2026-09-22
 
 - Added `.vscode/settings.json` to point the workspace at `venv/bin/python`.
 - Confirmed that the scanner virtual environment includes `requests` and can compile the header checker successfully.
 - This resolves the editor import warning caused by VS Code using a different Python interpreter.
 
+```bash
+Integrated a new system check script; details on this update will follow shortly.
+```
 ## Next Session
 
 Continue with scanner improvements and validation of the completed reconnaissance and reporting features.

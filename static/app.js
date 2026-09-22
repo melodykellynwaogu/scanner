@@ -158,6 +158,13 @@ function renderResults(data) {
     }
 
     // 1. Present Headers
+    const headerSummary = document.getElementById('headerSummary');
+    const summary = headerData.header_summary;
+    if (headerSummary) {
+        headerSummary.className = `header-summary ${summary?.status || 'unknown'}`;
+        headerSummary.innerText = summary?.message || 'Header verification details were not returned.';
+    }
+
     const presentList = document.getElementById('presentHeadersList');
     const presentHeaders = headerData.present_headers || {};
     presentList.innerHTML = Object.keys(presentHeaders).length ? '' : '<li>None identified</li>';
